@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <title>장바구니 확인</title>
+</head>
+<script>
+    $(document).ready(function(){ // 렌더링과 동시에 쿠키속의 장바구니 정보를 불러온 후 화면에 표시해 줘야 합니다.
+        show_basket()
+    })
+
+    function show_basket(){
+        $.ajax({
+            type: "GET",
+            url: "/get_basket",
+            data: {},
+            success: function(response){
+                let basket = response['basket']
+                // if
+                for (let i = 0 ; i < basket.length ; i++){
+                    fruit = basket[i]
+                    console.log(fruit)
+                    let temp_html = ` '${fruit}' `
+                    $('#fruit_list').append(temp_html)
+                }
+            }
+        })
+    }
+    function remove_basket() {
+        $.ajax({
+            type: "GET",
+            url: "/remove_basket",
+            data: {},
+            success: function(response){
+                alert('장바구니를 비웠습니다!')
+            }
+        })
+        window.location.reload()
+    }
+</script>
+<style>
+    .wrap{
+        max-width: 1000px;
+        width:95%;
+        margin: 0 auto;
+        text-align: center
+    }
+    .button_box{
+        margin: 20px 5px 0 5px
+    }
+    .button_box > form{
+        display: inline
+    }
+</style>
+<body>
+    <div class="wrap">
+        <h1>장바구니 목록</h1>
+        <h3><span id="fruit_list"></span></h3>
+        <div class="button_box">
+            <button type="button" class="btn btn-dark" onclick="remove_basket()">장바구니 삭제</button>
+            <form action="/">
+                <button type="submit" class="btn btn-dark">상품 목록</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

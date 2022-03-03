@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+    <title>상품 목록</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Sunflower', sans-serif;
+        }
+        .wrap{
+            margin:0 auto;
+            text-align: center;
+        }
+        table {
+            margin:0 auto;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            max-width: 1000px;
+            width: 95%;
+            font-size: 20px;
+        }
+        th, td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+        }
+        th {
+            background-color: beige;
+        }
+        .button_box{
+            margin: 20px 5px 20px 5px
+        }
+        .button_box > form{
+             display: inline
+        }
+    </style>
+    <script>
+        function selectAll(selectAll)  { // 모든 체크박스를 선택하는 메소드입니다.
+            let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = selectAll.checked
+            })
+        }
+        function send_basket(){
+            let checked_fruits = []; // 체크된 데이터를 전달받을 변수입니다.
+            $("input:checkbox[name=fruits]:checked").each(function() { //name이 fruits인 체크박스에서 체크된 요소를 받습니다.
+                checked_fruits.push($(this).val()) //push 메소드로 배열에 데이터를 전달합니다.
+            })
+
+            $.ajax({
+                type: "POST",
+                traditional: true, // ajax에서 배열로 자료를 넘기기 위한 설정이라고 합니다.
+                url: "/set_basket",
+                data: {'basket_give':checked_fruits},
+                success: function(response){
+                    alert('장바구니를 확인해주세요!')
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <h1 style="text-align: center; margin: 20px 0 20px 0">과일을 바구니에 담아주세요!</h1>
+    <div class="wrap">
+        <table>
+            <colgroup>
+                <col style="width:8%">
+                <col style="width:30%">
+                <col style="width:52%">
+                <col style="width:10%">
+            </colgroup>
+            <th>번호</th>
+            <th>상품사진</th>
+            <th>상품설명</th>
+            <th><input type="checkbox" name="basket" value="select_all" onclick='selectAll(this)'></th>
+            <tr>
+                <td>1</td>
+                <td><img src="static/img/apple.jpg" style="width: auto;height: 100px;"></td>
+                <td>사과는 사과나무의 열매로, 세계적으로 널리 재배되는 열매 가운데 하나이다.</td>
+                <td><input type="checkbox" name="fruits" value="apple"></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><img src="static/img/grape.jpg" style="width: auto;height: 100px;"></td>
+                <td>포도는 포도속(Vitis) 식물의 총칭, 또는 그 열매를 말한다.</td>
+                <td><input type="checkbox" name="fruits" value="grape"></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><img src="static/img/strawberry.jpg" style="width: auto;height: 100px;"></td>
+                <td>딸기는 장미과 딸기속에 속하는 과채류이다.</td>
+                <td><input type="checkbox" name="fruits" value="strawberry"></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><img src="static/img/banana.jpg" style="width: auto;height: 100px;"></td>
+                <td>바나나는 파초과 파초속의 여러해살이 식물과 열매를 두루 일컫는 말이다.</td>
+                <td><input type="checkbox" name="fruits" value="banana"></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><img src="static/img/watermelon.jpg" style="width: auto;height: 100px;"></td>
+                <td>수박은 남아프리카 원산의 한해살이 덩굴식물, 또는 그 열매를 말한다.</td>
+                <td><input type="checkbox" name="fruits" value="watermelon"></td>
+            </tr>
+        </table>
+        <div class="button_box">
+            <button type="button" class="btn btn-dark" onclick="send_basket()">장바구니 담기</button>
+            <form action="/basket">
+                <button type="submit" class="btn btn-dark">장바구니 확인</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
